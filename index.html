@@ -1,1473 +1,430 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Legendary | Fitness mall & Accessories</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Products | Legendary Fitness</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-  
-        <!-- Welcome Popup Modal -->
-        <div id="welcomeModal" style="display: flex; align-items: center; justify-content: center; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(30,27,75,0.85); z-index: 9999; transition: opacity 0.4s;">
-            <div style="background: linear-gradient(135deg, #10b981 60%, #6d28d9 100%); color: #fff; padding: 2.5rem 2rem 2rem 2rem; border-radius: 2rem; box-shadow: 0 8px 32px rgba(16,185,129,0.25); text-align: center; max-width: 350px; font-family: 'Poppins', sans-serif; position: relative;">
-                <span style="font-size: 2.5rem; display: block; margin-bottom: 0.5rem;"><i class="fas fa-star"></i></span>
-                <h2 style="margin: 0 0 0.5rem 0; font-family: 'Playfair Display', serif; font-size: 2rem;">Welcome!</h2>
-                <p style="font-size: 1.1rem; margin-bottom: 1.2rem;">Thank you for visiting <b>Legendary Fitness Mall</b>.<br>Start your fitness journey in style!</p>
-                <button id="closeWelcomeModal" style="background: #fff; color: #6d28d9; font-weight: 600; border: none; border-radius: 1.2rem; padding: 0.7rem 2rem; font-size: 1rem; cursor: pointer; box-shadow: 0 2px 8px rgba(109,40,217,0.12); transition: background 0.2s;">Enter Site</button>
-            </div>
+  <div class="container">
+    <header>
+      <div class="header-title">
+        <h1><i class="fas fa-dumbbell"></i> Admin Dashboard</h1>
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+      <div id="user-area" class="hidden">
+        <div class="user-info" id="userInfo">
+          <div class="avatar" id="user-avatar">U</div>
+          <span id="user-email"></span>
+          <button id="signOut" class="btn btn-outlineo">Sign Out</button>
         </div>
-    <!-- Header -->
-    <header id="header">
-        <div class="container header-container">
-            <a href="#" class="logo">
-                <i class="fas fa-dumbbell"></i>
-                <span>Fitness mall </span>
-            </a>
-            
-            <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="products.html">Products</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-            
-            <div class="header-actions">
-               <div class="cart-icon" id="cartIcon">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count">0</span>
-                </div>
-                <!-- <a href="#contact" class="cta-button">Get In Touch</a> -->
-            </div>
-            
-            <!-- <div class="mobile-menu">
-                <i class="fas fa-bars"></i>
-            </div> -->
-        </div>
+      </div>
     </header>
 
-    <!-- Cart Sidebar -->
-    <div class="cart-sidebar" id="cartSidebar">
-        <div class="cart-header">
-            <h3>Your Cart</h3>
-            <button class="close-cart" id="closeCart">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="cart-items" id="cartItems">
-            <!-- Cart items will be added here dynamically -->
-            <div class="empty-cart-message" id="emptyCartMessage">
-                <p>Your cart is empty</p>
+    <section id="auth-section">
+      <h2>Authentication</h2>
+      <div id="login-area">
+        <div class="card">
+          <div class="auth-form">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input id="email" type="email" placeholder="Enter your email" />
             </div>
-        </div>
-        <div class="cart-footer">
-            <div class="cart-total">
-                <span>Total:</span>
-                <span id="cartTotal">$0.00</span>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input id="password" type="password" placeholder="Enter your password" />
             </div>
-            <button class="checkout-btn">Proceed to Checkout</button>
-        </div>
-    </div>
-    <div class="overlay" id="overlay"></div>
-
-    <!-- Toast Notification -->
-    <div class="toast" id="toast">
-        <i class="fas fa-check-circle"></i>
-        <span>Item added to cart!</span>
-    </div>
-
-    <!-- Quick View Modal -->
-    <div class="quickview-modal" id="quickviewModal" aria-hidden="true">
-        <div class="quickview-backdrop" id="quickviewBackdrop"></div>
-        <div class="quickview-panel" role="dialog" aria-modal="true" aria-labelledby="qv-title">
-            <button class="qv-close" id="qvClose" aria-label="Close quick view"><i class="fas fa-times"></i></button>
-            <div class="qv-content">
-                <div class="qv-image" id="qvImage" style="background-image: url('')"></div>
-                <div class="qv-details">
-                    <h3 id="qvTitle">Product Title</h3>
-                    <p id="qvDescription">Product description goes here.</p>
-                    <div class="qv-meta">
-                        <span class="qv-price" id="qvPrice">$0.00</span>
-                        <div class="qv-actions">
-                            <button class="cta-button" id="qvAddToCart"><i class="fas fa-shopping-cart"></i>Buy</button>
-                            <button class="qv-wishlist" id="qvWishlist" aria-pressed="false"><i class="far fa-heart"></i></button>
-                        </div>
-                    </div>
-
-                    <div class="qv-rating" id="qvRating" data-id="">
-                        <div class="rating-label">Rate this product</div>
-                        <div class="stars" role="radiogroup" aria-label="Product rating">
-                            <button class="star" data-value="1" aria-label="1 star">
-                                <i class="fas fa-star"></i>
-                            </button>
-                            <button class="star" data-value="2" aria-label="2 stars"><i class="fas fa-star"></i></button>
-                            <button class="star" data-value="3" aria-label="3 stars"><i class="fas fa-star"></i></button>
-                            <button class="star" data-value="4" aria-label="4 stars"><i class="fas fa-star"></i></button>
-                            <button class="star" data-value="5" aria-label="5 stars"><i class="fas fa-star"></i></button>
-                        </div>
-                        <div class="rating-msg" id="ratingMsg"></div>
-                    </div>
-                </div>
+            <div class="form-group">
+              <button id="signIn" class="btn btn-primary">Sign In</button>
             </div>
+          </div>
         </div>
-    </div>
+      </div>
+    </section>
 
+    <section id="product-form-section" class="hidden">
+      <div class="section-title">
+        <h2>Product Management</h2>
+        <button id="newProduct" class="btn btn-outline"><i class="fas fa-plus"></i> New Product</button>
+      </div>
+      
+      <div class="card">
+        <form id="productForm">
+          <input id="prod-id" type="hidden" />
+          <div class="form-group">
+            <label for="name">Product Name</label>
+            <input id="name" placeholder="Enter product name" required />
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" placeholder="Enter product description"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="category">Category</label>
+            <select id="category" required>
+              <option value="">Select a category</option>
+              <option value="abs">Abs</option>
+              <option value="benches">Benches</option>
+              <option value="accessories">Accessories</option>
+              <option value="bikes">Bikes</option>
+              <option value="boxing">Boxing | Kicking</option>
+              <option value="physio">Physio-Rehab</option>
+              <option value="sauna">Sauna | Spa</option>
+              <option value="sports">Sports | Games</option>
+              <option value="commercial">Commercial</option>
+              <option value="treadmills">Treadmills</option>
+              <option value="wears">Wears</option>
+              <option value="weights">Weights</option>
+              <option value="auction">Products on Auction</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="price">Price ($)</label>
+            <input id="price" placeholder="0.00" required type="number" step="0.01" min="0" />
+          </div>
+          <div class="form-group">
+            <label for="imageUrl">Product Image URL</label>
+            <input id="imageUrl" type="text" placeholder="Paste image URL from ImgBB or similar service" />
+            <div class="url-help">
+              <strong>How to add images:</strong>
+              <ol style="margin-top: 8px; margin-left: 20px;">
+                <li>Upload your image to a free service like <a href="https://imgbb.com/" target="_blank">ImgBB</a></li>
+                <li>Copy the direct image URL</li>
+                <li>Paste it in the field above</li>
+              </ol>
+            </div>
+          </div>
+          <div class="form-group">
+            <button id="saveProduct" class="btn btn-primary"><i class="fas fa-save"></i> Save Product</button>
+            <button id="cancelEdit" type="button" class="btn btn-outline hidden"><i class="fas fa-times"></i> Cancel</button>
+          </div>
+        </form>
+      </div>
+    </section>
 
-    
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="floating-elements">
-            <div class="floating-element element-1"></div>
-            <div class="floating-element element-2"></div>
-            <div class="floating-element element-3"></div>
-            <div class="floating-element element-4"></div>
-        </div>
+    <section id="products-section" class="hidden">
+      <div class="section-title">
+        <h2>Products</h2>
+        <div id="products-count">0 products</div>
+      </div>
+      
+      <div id="adminProducts" class="product-grid">
+        <div class="loading">Loading products...</div>
+      </div>
+    </section>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { 
+      getAuth, 
+      signInWithEmailAndPassword, 
+      signOut, 
+      onAuthStateChanged 
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { 
+      getFirestore, 
+      collection, 
+      addDoc, 
+      getDocs, 
+      deleteDoc, 
+      doc, 
+      updateDoc, 
+      serverTimestamp 
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDQM3YauGK-Tj1VlgysvPmgR3JZL-jgM9Q",
+      authDomain: "legendary-fitness-mall.firebaseapp.com",
+      projectId: "legendary-fitness-mall",
+      storageBucket: "legendary-fitness-mall.firebasestorage.app",
+      messagingSenderId: "582763228257",
+      appId: "1:582763228257:web:2515ec627780051f1e4e20",
+      measurementId: "G-3NEWRS8SLW"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // DOM Elements
+    const emailInput = document.getElementById('email');
+    const pwdInput = document.getElementById('password');
+    const signInBtn = document.getElementById('signIn');
+    const signOutBtn = document.getElementById('signOut');
+    const loginArea = document.getElementById('login-area');
+    const userArea = document.getElementById('user-area');
+    const userEmail = document.getElementById('user-email');
+    const userAvatar = document.getElementById('user-avatar');
+    const userInfo = document.getElementById('userInfo');
+    const productFormSection = document.getElementById('product-form-section');
+    const productsSection = document.getElementById('products-section');
+    const adminProducts = document.getElementById('adminProducts');
+    const productsCount = document.getElementById('products-count');
+    const prodForm = document.getElementById('productForm');
+    const prodIdInput = document.getElementById('prod-id');
+    const nameInput = document.getElementById('name');
+    const descInput = document.getElementById('description');
+    const categoryInput = document.getElementById('category');
+    const priceInput = document.getElementById('price');
+    const imageUrlInput = document.getElementById('imageUrl');
+    const saveBtn = document.getElementById('saveProduct');
+    const newProductBtn = document.getElementById('newProduct');
+    const cancelEditBtn = document.getElementById('cancelEdit');
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+
+    // Authentication
+    signInBtn.onclick = async (e) => {
+      e.preventDefault();
+      try {
+        await signInWithEmailAndPassword(auth, emailInput.value, pwdInput.value);
+      } catch (error) {
+        showAlert('Error signing in: ' + error.message, 'error');
+      }
+    };
+
+    signOutBtn.onclick = () => signOut(auth);
+
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        // User is signed in
+        loginArea.style.display = 'none';
+        userArea.classList.remove('hidden');
+        productFormSection.classList.remove('hidden');
+        productsSection.classList.remove('hidden');
         
-        <div class="container hero-content">
-            <h1>Elevate Your Fitness Journey</h1>
-            <p>
-    Explore top-quality <strong>fitness gear</strong> — from <strong>Abs & Benches</strong> to <strong>Treadmills</strong>, <strong>Weights</strong>, and more.
-    Power your goals with trusted <strong>sports and gym equipment</strong> built to perform.
-  </p>
-          <div class="hero-buttons">
-                <a href="#products" class="cta-button">Shop Now</a>
-                <a href="#contact" class="btn-secondary">Book Consultation</a>
-            </div>
-        </div>
-    </section>
-    
-
-
-
-
-
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fitness Gallery | Premium Equipment Showcase</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #1a5c34;
-            --primary-light: #2e8b57;
-            --secondary: #f8b500;
-            --accent: #ff6b35;
-            --dark: #0c1f13;
-            --light: #f8f9fa;
-            --gray: #6c757d;
-            --transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            --radius: 16px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Roboto', sans-serif;
-            line-height: 1.7;
-            color: var(--dark);
-            background-color: var(--light);
-            overflow-x: hidden;
-        }
-
-        h1, h2, h3, h4, h5 {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 800;
-            line-height: 1.2;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Gallery Section */
-        .gallery-section {
-            padding: 100px 0;
-            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        .section-title h2 {
-            font-size: 3.5rem;
-            color: var(--dark);
-            margin-bottom: 15px;
-            position: relative;
-            display: inline-block;
-            opacity: 0;
-            animation: fadeInUp 1s ease forwards 0.3s;
-        }
-
-        .section-title h2::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 5px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            border-radius: 2px;
-        }
-
-        .section-title p {
-            color: var(--gray);
-            max-width: 700px;
-            margin: 0 auto;
-            font-size: 1.2rem;
-            opacity: 0;
-            animation: fadeInUp 1s ease forwards 0.6s;
-        }
-
-        /* Gallery Container */
-        .gallery-container {
-            position: relative;
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            height: 600px;
-            border-radius: var(--radius);
-            overflow: hidden;
-            box-shadow: var(--shadow);
-        }
-
-        /* Slideshow */
-        .slideshow {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            transition: opacity 1.5s ease-in-out;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            display: flex;
-            align-items: flex-end;
-            padding: 40px;
-        }
-
-        .slide.active {
-            opacity: 1;
-        }
-
-        .slide-content {
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 25px;
-            border-radius: var(--radius);
-            max-width: 600px;
-            transform: translateY(50px);
-            opacity: 0;
-            transition: all 0.8s ease 0.5s;
-        }
-
-        .slide.active .slide-content {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .slide-content h3 {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            color: var(--secondary);
-        }
-
-        .slide-content p {
-            font-size: 1.1rem;
-            line-height: 1.6;
-        }
-
-        /* Gallery Controls */
-        .gallery-controls {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 15px;
-            z-index: 10;
-        }
-
-        .control-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .control-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1);
-        }
-
-        /* Gallery Indicators */
-        .gallery-indicators {
-            position: absolute;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 10px;
-            z-index: 10;
-        }
-
-        .indicator {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .indicator.active {
-            background: var(--secondary);
-            transform: scale(1.2);
-        }
-
-        /* Thumbnail Gallery */
-        .thumbnail-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 30px;
-        }
-
-        .thumbnail {
-            height: 150px;
-            border-radius: var(--radius);
-            overflow: hidden;
-            position: relative;
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: var(--shadow);
-        }
-
-        .thumbnail:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .thumbnail img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: var(--transition);
-        }
-
-        .thumbnail:hover img {
-            transform: scale(1.1);
-        }
-
-        .thumbnail-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: var(--transition);
-        }
-
-        .thumbnail:hover .thumbnail-overlay {
-            opacity: 1;
-        }
-
-        .thumbnail-overlay i {
-            color: white;
-            font-size: 1.5rem;
-        }
-
-        /* Floating Elements */
-        .floating-elements {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .floating-element {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(26, 92, 52, 0.1);
-            animation: float 8s ease-in-out infinite;
-        }
-
-        .element-1 {
-            width: 100px;
-            height: 100px;
-            top: 10%;
-            left: 5%;
-            animation-delay: 0s;
-        }
-
-        .element-2 {
-            width: 150px;
-            height: 150px;
-            top: 70%;
-            left: 80%;
-            animation-delay: 2s;
-        }
-
-        .element-3 {
-            width: 80px;
-            height: 80px;
-            top: 40%;
-            left: 90%;
-            animation-delay: 4s;
-        }
-
-        .element-4 {
-            width: 120px;
-            height: 120px;
-            top: 80%;
-            left: 10%;
-            animation-delay: 1s;
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0) rotate(0deg);
-            }
-            50% {
-                transform: translateY(-20px) rotate(10deg);
-            }
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        /* Responsive Styles */
-        @media (max-width: 992px) {
-            .gallery-container {
-                height: 500px;
-            }
-            
-            .slide-content {
-                max-width: 500px;
-                padding: 20px;
-            }
-            
-            .slide-content h3 {
-                font-size: 1.7rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .gallery-section {
-                padding: 80px 0;
-            }
-            
-            .section-title h2 {
-                font-size: 2.5rem;
-            }
-            
-            .gallery-container {
-                height: 400px;
-            }
-            
-            .slide {
-                padding: 20px;
-            }
-            
-            .slide-content {
-                max-width: 100%;
-                padding: 15px;
-            }
-            
-            .slide-content h3 {
-                font-size: 1.5rem;
-            }
-            
-            .slide-content p {
-                font-size: 1rem;
-            }
-            
-            .thumbnail-gallery {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            }
-            
-            .thumbnail {
-                height: 120px;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .gallery-container {
-                height: 350px;
-            }
-            
-            .slide {
-                padding: 15px;
-            }
-            
-            .slide-content h3 {
-                font-size: 1.3rem;
-            }
-            
-            .control-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 1rem;
-            }
-            
-            .gallery-indicators {
-                bottom: 80px;
-            }
-            
-            .thumbnail-gallery {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- Gallery Section -->
-    <section class="gallery-section">
-        <div class="floating-elements">
-            <div class="floating-element element-1"></div>
-            <div class="floating-element element-2"></div>
-            <div class="floating-element element-3"></div>
-            <div class="floating-element element-4"></div>
-        </div>
+        // Update user info
+        userEmail.textContent = user.email;
+        userAvatar.textContent = user.email.charAt(0).toUpperCase();
         
-        <div class="container">
-            <div class="section-title">
-                <h2>Our Fitness Gallery</h2>
-                <p>Explore our premium fitness equipment and facilities through our stunning visual collection</p>
-            </div>
-            
-            <div class="gallery-container">
-                <div class="slideshow">
-                    <!-- Slide 1 -->
-                    <div class="slide active" style="background-image: url('https://jumbosportsng.com/cdn/shop/files/rn-image_picker_lib_temp_553009a4-d3cf-4854-9a70-79aa6f97c115_large.jpg?v=1753699528');">
-                        <div class="slide-content">
-                            <h3>Elliptical Bike GlideFit 1902</h3>
-                            <p>Full-Body, Low-Impact Training: Combines upper and lower body motion for effective calorie burn while reducing joint strain</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Slide 2 -->
-                    <div class="slide" style="background-image: url('https://jumbosportsng.com/cdn/shop/files/rn-image_picker_lib_temp_e4abc274-e71c-4951-b507-aed4e00545b1_large.jpg?v=1753706339');">
-                        <div class="slide-content">
-                            <h3>Treadmill EnduraFit 451</h3>
-                            <p>Powerful Performance: Equipped with a 1.5 HP DC motor, delivering smooth and consistent speeds from 1 to 12 KM/H for effective workouts.</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Slide 3 -->
-                    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1576678927484-cc907957088c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80');">
-                        <div class="slide-content">
-                            <h3>Cardio Zone</h3>
-                            <p>Our cardio section features the latest treadmills, ellipticals, and stationary bikes for effective cardiovascular workouts.</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Slide 4 -->
-                    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1534258936925-c58bed479fcb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80');">
-                        <div class="slide-content">
-                            <h3>Functional Training Space</h3>
-                            <p>Our functional training area is designed for versatile workouts that improve strength, mobility, and coordination.</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Slide 5 -->
-                    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80');">
-                        <div class="slide-content">
-                            <h3>Dumbbell & Free Weights</h3>
-                            <p>Our comprehensive collection of dumbbells and free weights caters to all fitness levels and training styles.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Gallery Controls -->
-                <div class="gallery-controls">
-                    <button class="control-btn prev-btn">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button class="control-btn next-btn">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
-                
-                <!-- Gallery Indicators -->
-                <div class="gallery-indicators">
-                    <div class="indicator active" data-index="0"></div>
-                    <div class="indicator" data-index="1"></div>
-                    <div class="indicator" data-index="2"></div>
-                    <div class="indicator" data-index="3"></div>
-                    <div class="indicator" data-index="4"></div>
-                </div>
-            </div>
-            
-            <!-- Thumbnail Gallery -->
-            <div class="thumbnail-gallery">
-                <div class="thumbnail" data-index="0">
-                    <img src="https://jumbosportsng.com/cdn/shop/files/rn-image_picker_lib_temp_553009a4-d3cf-4854-9a70-79aa6f97c115_large.jpg?v=1753699528" alt="Treadmills">
-                    <div class="thumbnail-overlay">
-                        <i class="fas fa-search-plus"></i>
-                    </div>
-                </div>
-                <div class="thumbnail" data-index="1">
-                    <img src="https://jumbosportsng.com/cdn/shop/files/rn-image_picker_lib_temp_e4abc274-e71c-4951-b507-aed4e00545b1_large.jpg?v=1753706339" alt="Bikes">
-                    <div class="thumbnail-overlay">
-                        <i class="fas fa-search-plus"></i>
-                    </div>
-                </div>
-                <div class="thumbnail" data-index="2">
-                    <img src="https://images.unsplash.com/photo-1576678927484-cc907957088c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Cardio Zone">
-                    <div class="thumbnail-overlay">
-                        <i class="fas fa-search-plus"></i>
-                    </div>
-                </div>
-                <div class="thumbnail" data-index="3">
-                    <img src="https://images.unsplash.com/photo-1534258936925-c58bed479fcb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Functional Training">
-                    <div class="thumbnail-overlay">
-                        <i class="fas fa-search-plus"></i>
-                    </div>
-                </div>
-                <div class="thumbnail" data-index="4">
-                    <img src="https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Dumbbells">
-                    <div class="thumbnail-overlay">
-                        <i class="fas fa-search-plus"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+        loadAdminProducts();
+      } else {
+        // User is signed out
+        loginArea.style.display = 'block';
+        userArea.classList.add('hidden');
+        productFormSection.classList.add('hidden');
+        productsSection.classList.add('hidden');
+        adminProducts.innerHTML = '<div class="loading">Please sign in to view products</div>';
+      }
+    });
 
-    <script>
-        // Gallery functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const slides = document.querySelectorAll('.slide');
-            const indicators = document.querySelectorAll('.indicator');
-            const prevBtn = document.querySelector('.prev-btn');
-            const nextBtn = document.querySelector('.next-btn');
-            const thumbnails = document.querySelectorAll('.thumbnail');
-            
-            let currentSlide = 0;
-            let slideInterval;
-            const slideDuration = 5000; // 5 seconds
-            
-            // Function to show a specific slide
-            function showSlide(index) {
-                // Remove active class from all slides and indicators
-                slides.forEach(slide => slide.classList.remove('active'));
-                indicators.forEach(indicator => indicator.classList.remove('active'));
-                
-                // Add active class to current slide and indicator
-                slides[index].classList.add('active');
-                indicators[index].classList.add('active');
-                
-                currentSlide = index;
-            }
-            
-            // Function to show next slide
-            function nextSlide() {
-                let nextIndex = (currentSlide + 1) % slides.length;
-                showSlide(nextIndex);
-            }
-            
-            // Function to show previous slide
-            function prevSlide() {
-                let prevIndex = (currentSlide - 1 + slides.length) % slides.length;
-                showSlide(prevIndex);
-            }
-            
-            // Start automatic slideshow
-            function startSlideshow() {
-                slideInterval = setInterval(nextSlide, slideDuration);
-            }
-            
-            // Stop automatic slideshow
-            function stopSlideshow() {
-                clearInterval(slideInterval);
-            }
-            
-            // Event listeners for controls
-            nextBtn.addEventListener('click', function() {
-                stopSlideshow();
-                nextSlide();
-                startSlideshow();
-            });
-            
-            prevBtn.addEventListener('click', function() {
-                stopSlideshow();
-                prevSlide();
-                startSlideshow();
-            });
-            
-            // Event listeners for indicators
-            indicators.forEach(indicator => {
-                indicator.addEventListener('click', function() {
-                    stopSlideshow();
-                    let index = parseInt(this.getAttribute('data-index'));
-                    showSlide(index);
-                    startSlideshow();
-                });
-            });
-            
-            // Event listeners for thumbnails
-            thumbnails.forEach(thumbnail => {
-                thumbnail.addEventListener('click', function() {
-                    stopSlideshow();
-                    let index = parseInt(this.getAttribute('data-index'));
-                    showSlide(index);
-                    startSlideshow();
-                });
-            });
-            
-            // Pause slideshow when hovering over gallery
-            const galleryContainer = document.querySelector('.gallery-container');
-            galleryContainer.addEventListener('mouseenter', stopSlideshow);
-            galleryContainer.addEventListener('mouseleave', startSlideshow);
-            
-            // Initialize slideshow
-            startSlideshow();
-            
-            // Add animation to slideshow container
-            const slideshow = document.querySelector('.slideshow');
-            slideshow.style.animation = 'pulse 20s infinite alternate';
-        });
-    </script>
-</body>
-</html>
+    // Mobile menu toggle
+    mobileMenuBtn.addEventListener('click', () => {
+      userInfo.classList.toggle('active');
+    });
 
-    <!-- Products Section -->
-    <section class="products" id="products">
-        <div class="container">
-            <div class="section-title">
-                <h2>Featured Products</h2>
-                <p>Browse our selection of premium fitness equipment designed for maximum results.</p>
-            </div>
-            
-            <div class="products-grid">
-                <div class="product-card">
-                    <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80');">
-                        <div class="product-overlay">
-                            <button class="cta-button quick-view">Quick View</button>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h3>Professional Weight Set</h3>
-                        <p>Complete weight set with Olympic barbell, plates, and storage rack for serious strength training.</p>
-                        <span class="product-price">$899.99</span>
-                        <div class="product-actions">
-                            <button class="add-to-cart" data-id="1" data-name="Professional Weight Set" data-price="899.99" data-image="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80">
-                                <i class="fas fa-shopping-cart"></i> Add to Cart
-                            </button>
-                            <button class="wishlist">
-                                <i class="far fa-heart"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1576678927484-cc907957088c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80');">
-                        <div class="product-overlay">
-                            <button class="cta-button quick-view">Quick View</button>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h3>Commercial Treadmill</h3>
-                        <p>High-performance treadmill with advanced features for cardio and interval training.</p>
-                        <span class="product-price">$2,499.99</span>
-                        <div class="product-actions">
-                            <button class="add-to-cart" data-id="2" data-name="Commercial Treadmill" data-price="2499.99" data-image="https://images.unsplash.com/photo-1576678927484-cc907957088c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80">
-                                <i class="fas fa-shopping-cart"></i> Add to Cart
-                            </button>
-                            <button class="wishlist">
-                                <i class="far fa-heart"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1534258936925-c58bed479fcb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80');">
-                        <div class="product-overlay">
-                            <button class="cta-button quick-view">Quick View</button>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h3>Functional Trainer</h3>
-                        <p>Versatile cable machine for full-body workouts with adjustable pulleys and attachments.</p>
-                        <span class="product-price">$1,799.99</span>
-                        <div class="product-actions">
-                            <button class="add-to-cart" data-id="3" data-name="Functional Trainer" data-price="1799.99" data-image="https://images.unsplash.com/photo-1534258936925-c58bed479fcb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80">
-                                <i class="fas fa-shopping-cart"></i> Add to Cart
-                            </button>
-                            <button class="wishlist">
-                                <i class="far fa-heart"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80');">
-                        <div class="product-overlay">
-                            <button class="cta-button quick-view">Quick View</button>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h3>Adjustable Dumbbell Set</h3>
-                        <p>Space-saving adjustable dumbbells that replace multiple pairs with quick selection dial.</p>
-                        <span class="product-price">$599.99</span>
-                        <div class="product-actions">
-                            <button class="add-to-cart" data-id="4" data-name="Adjustable Dumbbell Set" data-price="599.99" data-image="https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80">
-                                <i class="fas fa-shopping-cart"></i> Add to Cart
-                            </button>
-                            <button class="wishlist">
-                                <i class="far fa-heart"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1596357395217-80de13130e92?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1742&q=80');">
-                        <div class="product-overlay">
-                            <button class="cta-button quick-view">Quick View</button>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h3>Yoga Mat Premium</h3>
-                        <p>Non-slip, eco-friendly yoga mat with excellent cushioning for all types of yoga practice.</p>
-                        <span class="product-price">$49.99</span>
-                        <div class="product-actions">
-                            <button class="add-to-cart" data-id="5" data-name="Yoga Mat Premium" data-price="49.99" data-image="https://images.unsplash.com/photo-1596357395217-80de13130e92?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1742&q=80">
-                                <i class="fas fa-shopping-cart"></i> Add to Cart
-                            </button>
-                            <button class="wishlist">
-                                <i class="far fa-heart"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80');">
-                        <div class="product-overlay">
-                            <button class="cta-button quick-view">Quick View</button>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h3>Resistance Bands Set</h3>
-                        <p>Complete set of resistance bands with handles and door anchor for full-body workouts.</p>
-                        <span class="product-price">$39.99</span>
-                        <div class="product-actions">
-                            <button class="add-to-cart" data-id="6" data-name="Resistance Bands Set" data-price="39.99" data-image="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80">
-                                <i class="fas fa-shopping-cart"></i> Add to Cart
-                            </button>
-                            <button class="wishlist">
-                                <i class="far fa-heart"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    // Product form management
+    newProductBtn.onclick = () => {
+      prodForm.reset();
+      prodIdInput.value = '';
+      cancelEditBtn.classList.add('hidden');
+      saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Product';
+    };
 
-    <!-- Contact Section -->
-    <section class="contact" id="contact">
-        <div class="container">
-            <div class="section-title">
-                <h2>Get In Touch</h2>
-                <p>Have questions or ready to transform your fitness journey? Contact us today!</p>
-            </div>
-            
-            <div class="contact-container">
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="fas fa-phone-alt"></i>
-                        </div>
-                        <div class="contact-details">
-                            <h3>Call Us</h3>
-                            <p>+2348156747990</p>
-                        </div>
-                    </div>
-                    
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <div class="contact-details">
-                            <h3>Email Us</h3>
-                            <p>Legendaryfitness62@gmail.com</p>
-                        </div>
-                    </div>
-                    
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="fas fa-map-marker-alt"></i>
-                        </div>
-                        <div class="contact-details">
-                            <h3>Visit Us</h3>
-                            <p>37 Makinde street Ojuelegba Lagos state</p>
-                        </div>
-                    </div>
-                    
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                        <div class="contact-details">
-                            <h3>Business Hours</h3>
-                            <p>Monday - Saturday: 9AM - 8PM<br>Sunday: 11AM - 6PM</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="contact-form">
-                    <form id="contactForm">
-                        <div class="form-group">
-                            <label for="name">Your Name</label>
-                            <input type="text" id="name" class="form-control" placeholder="Enter your name" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="email">Email Address</label>
-                            <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="phone">Phone Number</label>
-                            <input type="tel" id="phone" class="form-control" placeholder="Enter your phone number">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="message">Your Message</label>
-                            <textarea id="message" class="form-control" placeholder="How can we help you?" required></textarea>
-                        </div>
-                        
-                        <button type="submit" class="cta-button" style="width: 100%;">Send Message</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
+    cancelEditBtn.onclick = () => {
+      prodForm.reset();
+      prodIdInput.value = '';
+      cancelEditBtn.classList.add('hidden');
+      saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Product';
+    };
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-column">
-                    <h3>Legendary Fitness mall </h3>
-<p>
-    Discover premium fitness equipment and accessories designed to help you achieve your goals faster and more effectively.
-    Shop quality <strong>Abs & Benches</strong>, <strong>Accessories</strong>, <strong>Bikes</strong>, <strong>Boxing & Kicking</strong>,
-    <strong>Physio-Rehab</strong>, <strong>Sauna & Spa</strong>, <strong>Sports & Games</strong>, <strong>Commercial Equipment</strong>,
-    <strong>Treadmills</strong>, <strong>Wears</strong>, and <strong>Weights</strong> — all in one store.
-  </p>                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-                
-                <div class="footer-column">
-                    <h3>Quick Links</h3>
-                    <ul class="footer-links">
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#products">Products</a></li>
-                        <li><a href="#about">About Us</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-column">
-                    <h3>Customer Service</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">Shipping Info</a></li>
-                        <li><a href="#">Returns & Exchanges</a></li>
-                        <li><a href="#">Size Guide</a></li>
-                        <li><a href="#">FAQs</a></li>
-                    </ul>
-                </div>
-                
-                <!-- <div class="footer-column">
-                    <h3>Newsletter</h3>
-                    <p>Subscribe to get updates on new products and exclusive offers.</p>
-                    <form class="newsletter-form">
-                        <div class="form-group">
-                            <input type="email" class="form-control" placeholder="Your email address" required>
-                        </div>
-                        <button type="submit" class="cta-button" style="width: 100%; margin-top: 10px;">Subscribe</button>
-                    </form>
-                </div> -->
-            </div>
-            
-            <div class="footer-bottom">
-                <p>&copy; 2025 Legendary Fitness mall . All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    saveBtn.onclick = async (e) => {
+      e.preventDefault();
+      
+      if (!nameInput.value || !priceInput.value || !categoryInput.value) {
+        showAlert('Please fill in all required fields', 'error');
+        return;
+      }
 
-    <script>
-        // Cart functionality
-        let cart = [];
-        const cartIcon = document.getElementById('cartIcon');
-        const cartSidebar = document.getElementById('cartSidebar');
-        const closeCart = document.getElementById('closeCart');
-        const overlay = document.getElementById('overlay');
-        const cartItems = document.getElementById('cartItems');
-        const cartTotal = document.getElementById('cartTotal');
-        const cartCount = document.querySelector('.cart-count');
-        const toast = document.getElementById('toast');
-        const emptyCartMessage = document.getElementById('emptyCartMessage');
+      try {
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
 
-        // Toggle cart sidebar
-        cartIcon.addEventListener('click', () => {
-            cartSidebar.classList.add('active');
-            overlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-
-        closeCart.addEventListener('click', () => {
-            cartSidebar.classList.remove('active');
-            overlay.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        });
-
-        overlay.addEventListener('click', () => {
-            cartSidebar.classList.remove('active');
-            overlay.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        });
-
-        // Add to cart functionality
-        document.querySelectorAll('.add-to-cart').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const product = {
-                    id: e.target.getAttribute('data-id'),
-                    name: e.target.getAttribute('data-name'),
-                    price: parseFloat(e.target.getAttribute('data-price')),
-                    image: e.target.getAttribute('data-image'),
-                    quantity: 1
-                };
-
-                addToCart(product);
-                showToast();
-            });
-        });
-
-        function addToCart(product) {
-            // Check if product is already in cart
-            const existingItem = cart.find(item => item.id === product.id);
-            
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                cart.push(product);
-            }
-            
-            updateCart();
-        }
-
-        function updateCart() {
-            // Update cart count
-            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-            cartCount.textContent = totalItems;
-            
-            // Update cart items
-            cartItems.innerHTML = '';
-            
-            if (cart.length === 0) {
-                emptyCartMessage.style.display = 'block';
-                cartItems.appendChild(emptyCartMessage);
-            } else {
-                emptyCartMessage.style.display = 'none';
-                
-                cart.forEach(item => {
-                    const cartItem = document.createElement('div');
-                    cartItem.className = 'cart-item';
-                    cartItem.innerHTML = `
-                        <div class="cart-item-image" style="background-image: url('${item.image}')"></div>
-                        <div class="cart-item-details">
-                            <h4>${item.name}</h4>
-                            <div class="cart-item-price">$${item.price.toFixed(2)}</div>
-                            <div class="cart-item-actions">
-                                <div class="quantity-controls">
-                                    <button class="quantity-btn decrease" data-id="${item.id}">-</button>
-                                    <span>${item.quantity}</span>
-                                    <button class="quantity-btn increase" data-id="${item.id}">+</button>
-                                </div>
-                                <button class="remove-item" data-id="${item.id}">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                    cartItems.appendChild(cartItem);
-                });
-                
-                // Add event listeners to quantity buttons
-                document.querySelectorAll('.decrease').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        const id = e.target.getAttribute('data-id');
-                        decreaseQuantity(id);
-                    });
-                });
-                
-                document.querySelectorAll('.increase').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        const id = e.target.getAttribute('data-id');
-                        increaseQuantity(id);
-                    });
-                });
-                
-                document.querySelectorAll('.remove-item').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        const id = e.target.closest('.remove-item').getAttribute('data-id');
-                        removeFromCart(id);
-                    });
-                });
-            }
-            
-            // Update cart total
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            cartTotal.textContent = `$${total.toFixed(2)}`;
-        }
-
-        function increaseQuantity(id) {
-            const item = cart.find(item => item.id === id);
-            if (item) {
-                item.quantity += 1;
-                updateCart();
-            }
-        }
-
-        function decreaseQuantity(id) {
-            const item = cart.find(item => item.id === id);
-            if (item) {
-                if (item.quantity > 1) {
-                    item.quantity -= 1;
-                } else {
-                    removeFromCart(id);
-                    return;
-                }
-                updateCart();
-            }
-        }
-
-        function removeFromCart(id) {
-            cart = cart.filter(item => item.id !== id);
-            updateCart();
-        }
-
-        function showToast() {
-            toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-
-        // Form submission
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Thank you for your message! We will get back to you soon.');
-            this.reset();
-        });
-
-        // Animation on scroll for product cards
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
+        const payload = {
+          name: nameInput.value,
+          description: descInput.value,
+          category: categoryInput.value,
+          price: parseFloat(priceInput.value),
+          imageUrl: imageUrlInput.value || null,
+          updatedAt: serverTimestamp()
         };
 
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animate');
-                }
-            });
-        }, observerOptions);
+        if (prodIdInput.value) {
+          // Update existing product
+          const docRef = doc(db, 'products', prodIdInput.value);
+          await updateDoc(docRef, payload);
+          showAlert('Product updated successfully!', 'success');
+        } else {
+          // Add new product
+          payload.createdAt = serverTimestamp();
+          await addDoc(collection(db, 'products'), payload);
+          showAlert('Product added successfully!', 'success');
+        }
 
-        // Observe product cards
-        document.querySelectorAll('.product-card').forEach(card => {
-            observer.observe(card);
+        // Reset form and reload products
+        prodForm.reset();
+        prodIdInput.value = '';
+        cancelEditBtn.classList.add('hidden');
+        saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Product';
+        loadAdminProducts();
+      } catch (error) {
+        console.error(error);
+        showAlert('Error saving product: ' + error.message, 'error');
+      } finally {
+        saveBtn.disabled = false;
+      }
+    };
+
+    // Load products for admin
+    async function loadAdminProducts() {
+      try {
+        adminProducts.innerHTML = '<div class="loading">Loading products...</div>';
+        
+        const snap = await getDocs(collection(db, 'products'));
+        const products = [];
+        
+        snap.forEach(docSnap => {
+          products.push({ id: docSnap.id, ...docSnap.data() });
         });
 
-        // Header scroll effect
-        window.addEventListener('scroll', function() {
-            const header = document.getElementById('header');
-            if (window.scrollY > 50) {
-                header.style.padding = '15px 0';
-                header.style.backgroundColor = 'rgba(255, 255, 255, 0.98)';
-            } else {
-                header.style.padding = '20px 0';
-                header.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+        // Update products count
+        productsCount.textContent = `${products.length} product${products.length !== 1 ? 's' : ''}`;
+        
+        if (products.length === 0) {
+          adminProducts.innerHTML = '<div class="loading">No products found. Add your first product!</div>';
+          return;
+        }
+
+        // Sort by creation date (newest first)
+        products.sort((a, b) => {
+          const aTime = a.createdAt?.toDate()?.getTime() || 0;
+          const bTime = b.createdAt?.toDate()?.getTime() || 0;
+          return bTime - aTime;
+        });
+
+        // Render products
+        adminProducts.innerHTML = '';
+        products.forEach(product => {
+          const productElement = document.createElement('div');
+          productElement.className = 'product-card';
+          
+          // Format category for display
+          const categoryDisplay = formatCategory(product.category);
+          
+          productElement.innerHTML = `
+            <div class="product-image" style="background-image: url('${product.imageUrl || 'https://via.placeholder.com/300x180?text=No+Image'}')"></div>
+            <div class="product-details">
+              <div class="product-name">${product.name}</div>
+              ${product.category ? `<div class="product-category">${categoryDisplay}</div>` : ''}
+              <div class="product-price">$${(product.price || 0).toFixed(2)}</div>
+              <div class="product-description">${product.description || 'No description provided'}</div>
+              <div class="product-actions">
+                <button data-id="${product.id}" class="btn btn-primary edit-btn"><i class="fas fa-edit"></i> Edit</button>
+                <button data-id="${product.id}" class="btn btn-danger delete-btn"><i class="fas fa-trash"></i> Delete</button>
+              </div>
+            </div>
+          `;
+          adminProducts.appendChild(productElement);
+        });
+
+        // Attach event listeners
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+          btn.onclick = async (e) => {
+            const id = e.target.dataset.id;
+            const productName = products.find(p => p.id === id)?.name || 'this product';
+            
+            if (!confirm(`Are you sure you want to delete "${productName}"?`)) return;
+            
+            try {
+              await deleteDoc(doc(db, 'products', id));
+              showAlert('Product deleted successfully!', 'success');
+              loadAdminProducts();
+            } catch (error) {
+              showAlert('Error deleting product: ' + error.message, 'error');
             }
+          };
         });
 
-        // Wishlist functionality
-        document.querySelectorAll('.wishlist').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const icon = e.target.querySelector('i') || e.target;
-                if (icon.classList.contains('far')) {
-                    icon.classList.remove('far');
-                    icon.classList.add('fas');
-                    icon.style.color = '#e53935';
-                } else {
-                    icon.classList.remove('fas');
-                    icon.classList.add('far');
-                    icon.style.color = '';
-                }
-            });
-        });
-        // Welcome Modal logic
-        document.addEventListener('DOMContentLoaded', function() {
-            var modal = document.getElementById('welcomeModal');
-            var closeBtn = document.getElementById('closeWelcomeModal');
-            if (!sessionStorage.getItem('welcomeShown')) {
-                modal.style.display = 'flex';
-                sessionStorage.setItem('welcomeShown', 'true');
-            } else {
-                modal.style.display = 'none';
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+          btn.onclick = async (e) => {
+            const id = e.target.dataset.id;
+            const product = products.find(p => p.id === id);
+            
+            if (product) {
+              // Populate form with product data
+              prodIdInput.value = id;
+              nameInput.value = product.name || '';
+              descInput.value = product.description || '';
+              categoryInput.value = product.category || '';
+              priceInput.value = product.price || '';
+              imageUrlInput.value = product.imageUrl || '';
+              
+              // Update UI for edit mode
+              saveBtn.innerHTML = '<i class="fas fa-save"></i> Update Product';
+              cancelEditBtn.classList.remove('hidden');
+              
+              // Scroll to form
+              productFormSection.scrollIntoView({ behavior: 'smooth' });
             }
-            closeBtn.addEventListener('click', function() {
-                modal.style.opacity = '0';
-                setTimeout(function() {
-                    modal.style.display = 'none';
-                }, 400);
-            });
+          };
         });
+      } catch (error) {
+        console.error(error);
+        adminProducts.innerHTML = '<div class="loading">Error loading products</div>';
+        showAlert('Error loading products: ' + error.message, 'error');
+      }
+    }
 
-        // Quick View Modal functionality
-        const quickviewModal = document.getElementById('quickviewModal');
-        const quickviewBackdrop = document.getElementById('quickviewBackdrop');
-        const qvClose = document.getElementById('qvClose');
-        const qvImage = document.getElementById('qvImage');
-        const qvTitle = document.getElementById('qvTitle');
-        const qvDescription = document.getElementById('qvDescription');
-        const qvPrice = document.getElementById('qvPrice');
-        const qvAddToCart = document.getElementById('qvAddToCart');
-        const qvWishlist = document.getElementById('qvWishlist');
-        const qvRating = document.getElementById('qvRating');
-        const ratingMsg = document.getElementById('ratingMsg');
+    // Helper function to format category for display
+    function formatCategory(category) {
+      const categoryMap = {
+        'abs': 'Abs',
+        'benches': 'Benches',
+        'accessories': 'Accessories',
+        'bikes': 'Bikes',
+        'boxing': 'Boxing | Kicking',
+        'physio': 'Physio-Rehab',
+        'sauna': 'Sauna | Spa',
+        'sports': 'Sports | Games',
+        'commercial': 'Commercial',
+        'treadmills': 'Treadmills',
+        'wears': 'Wears',
+        'weights': 'Weights',
+        'auction': 'Products on Auction'
+      };
+      
+      return categoryMap[category] || category;
+    }
 
-        // Helper to find product details from card
-        function getCardData(card) {
-            const name = card.querySelector('.product-content h3').textContent.trim();
-            const desc = card.querySelector('.product-content p').textContent.trim();
-            const price = card.querySelector('.product-price').textContent.trim();
-            const imgStyle = card.querySelector('.product-image').getAttribute('style') || '';
-            const imgMatch = imgStyle.match(/url\(['"]?(.*?)['"]?\)/);
-            const image = imgMatch ? imgMatch[1] : '';
-            const addBtn = card.querySelector('.add-to-cart');
-            const id = addBtn ? addBtn.getAttribute('data-id') : '';
-            return { id, name, desc, price, image };
+    // Helper function to show alerts
+    function showAlert(message, type) {
+      // Remove existing alerts
+      const existingAlert = document.querySelector('.alert');
+      if (existingAlert) {
+        existingAlert.remove();
+      }
+      
+      const alert = document.createElement('div');
+      alert.className = `alert alert-${type}`;
+      alert.textContent = message;
+      
+      // Insert at the top of the container
+      const container = document.querySelector('.container');
+      container.insertBefore(alert, container.firstChild);
+      
+      // Auto remove after 5 seconds
+      setTimeout(() => {
+        if (alert.parentNode) {
+          alert.remove();
         }
-
-        // Open quick view and populate
-        document.querySelectorAll('.quick-view').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const card = e.target.closest('.product-card');
-                if (!card) return;
-                const data = getCardData(card);
-
-                qvImage.style.backgroundImage = `url('${data.image}')`;
-                qvTitle.textContent = data.name;
-                qvDescription.textContent = data.desc;
-                qvPrice.textContent = data.price;
-                qvRating.setAttribute('data-id', data.id || '');
-
-                // sync wishlist icon state with card
-                const heart = card.querySelector('.wishlist i');
-                const qvHeartIcon = qvWishlist.querySelector('i');
-                if (heart && heart.classList.contains('fas')) {
-                    qvHeartIcon.classList.remove('far'); qvHeartIcon.classList.add('fas');
-                    qvWishlist.setAttribute('aria-pressed', 'true');
-                } else {
-                    qvHeartIcon.classList.remove('fas'); qvHeartIcon.classList.add('far');
-                    qvWishlist.setAttribute('aria-pressed', 'false');
-                }
-
-                // load saved rating
-                const saved = localStorage.getItem('rating_' + data.id);
-                updateStars(parseInt(saved || '0'));
-
-                // show modal
-                quickviewModal.classList.add('active');
-                quickviewModal.setAttribute('aria-hidden', 'false');
-                document.body.style.overflow = 'hidden';
-            });
-        });
-
-        function closeQuickview() {
-            quickviewModal.classList.remove('active');
-            quickviewModal.setAttribute('aria-hidden', 'true');
-            document.body.style.overflow = 'auto';
-        }
-
-        quickviewBackdrop.addEventListener('click', closeQuickview);
-        qvClose.addEventListener('click', closeQuickview);
-
-        // Wishlist toggle in modal (also sync back to card)
-        qvWishlist.addEventListener('click', (e) => {
-            const btn = e.currentTarget;
-            const pressed = btn.getAttribute('aria-pressed') === 'true';
-            const icon = btn.querySelector('i');
-            btn.setAttribute('aria-pressed', String(!pressed));
-            if (!pressed) { icon.classList.remove('far'); icon.classList.add('fas'); icon.style.color = '#e53935'; }
-            else { icon.classList.remove('fas'); icon.classList.add('far'); icon.style.color = ''; }
-
-            // reflect back to card if present
-            const pid = qvRating.getAttribute('data-id');
-            if (pid) {
-                const cardBtn = document.querySelector(`.add-to-cart[data-id="${pid}"]`);
-                if (cardBtn) {
-                    const card = cardBtn.closest('.product-card');
-                    const heart = card.querySelector('.wishlist i');
-                    if (heart) {
-                        if (!pressed) { heart.classList.remove('far'); heart.classList.add('fas'); heart.style.color = '#e53935'; }
-                        else { heart.classList.remove('fas'); heart.classList.add('far'); heart.style.color = ''; }
-                    }
-                }
-            }
-        });
-
-        // Add-to-cart from quickview
-        qvAddToCart.addEventListener('click', () => {
-            const pid = qvRating.getAttribute('data-id');
-            if (!pid) return;
-            const cardBtn = document.querySelector(`.add-to-cart[data-id="${pid}"]`);
-            if (cardBtn) cardBtn.click();
-            showToast();
-            closeQuickview();
-        });
-
-        // Star rating logic
-        const starButtons = Array.from(document.querySelectorAll('.star'));
-        starButtons.forEach(star => {
-            star.addEventListener('click', (e) => {
-                const value = parseInt(star.getAttribute('data-value'));
-                const pid = qvRating.getAttribute('data-id');
-                if (!pid) return;
-                // store
-                localStorage.setItem('rating_' + pid, String(value));
-                updateStars(value);
-                ratingMsg.textContent = `Thanks — you rated this ${value} ${value === 1 ? 'star' : 'stars'}.`;
-            });
-            star.addEventListener('mouseenter', (e) => {
-                const value = parseInt(star.getAttribute('data-value'));
-                highlightStars(value);
-            });
-            star.addEventListener('mouseleave', (e) => {
-                const pid = qvRating.getAttribute('data-id');
-                const saved = parseInt(localStorage.getItem('rating_' + pid) || '0');
-                updateStars(saved);
-            });
-        });
-
-        function highlightStars(value) {
-            starButtons.forEach(s => {
-                const v = parseInt(s.getAttribute('data-value'));
-                if (v <= value) s.classList.add('active'); else s.classList.remove('active');
-            });
-        }
-
-        function updateStars(value) {
-            starButtons.forEach(s => {
-                const v = parseInt(s.getAttribute('data-value'));
-                s.classList.toggle('active', v <= value);
-            });
-        }
-
-    </script>
+      }, 5000);
+    }
+  </script>
 </body>
 </html>
-
-
-
-
-<!-- // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDQM3YauGK-Tj1VlgysvPmgR3JZL-jgM9Q",
-  authDomain: "legendary-fitness-mall.firebaseapp.com",
-  projectId: "legendary-fitness-mall",
-  storageBucket: "legendary-fitness-mall.firebasestorage.app",
-  messagingSenderId: "582763228257",
-  appId: "1:582763228257:web:2515ec627780051f1e4e20",
-  measurementId: "G-3NEWRS8SLW"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app); -->
