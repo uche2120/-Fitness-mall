@@ -1044,7 +1044,7 @@
     <div class="cart-footer">
       <div class="cart-total">
         <span>Total:</span>
-        <span id="cartTotal">$0.00</span>
+        <span id="cartTotal">₦0.00</span>
       </div>
       <button class="checkout-btn" id="checkoutBtn">Proceed to Checkout</button>
     </div>
@@ -1068,7 +1068,7 @@
           <h3 id="qvTitle">Product Title</h3>
           <p id="qvDescription">Product description goes here.</p>
           <div class="qv-meta">
-            <span class="qv-price" id="qvPrice">$0.00</span>
+            <span class="qv-price" id="qvPrice">₦0.00</span>
             <div class="qv-actions">
               <button class="cta-button" id="qvAddToCart"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
               <button class="qv-wishlist" id="qvWishlist"><i class="far fa-heart"></i></button>
@@ -1232,7 +1232,7 @@
         <div class="product-content">
           <h3>${product.name}</h3>
           <p>${product.description || 'No description available'}</p>
-          <span class="product-price">$${parseFloat(product.price || 0).toFixed(2)}</span>
+          <span class="product-price">₦${parseFloat(product.price || 0).toFixed(2)}</span>
           <div class="product-actions">
             <button class="add-to-cart" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}" data-image="${product.imageUrl}">
               <i class="fas fa-shopping-cart"></i> Add to Cart
@@ -1262,7 +1262,7 @@
       qvImage.style.backgroundImage = `url('${product.imageUrl || 'https://via.placeholder.com/500x300?text=No+Image'}')`;
       qvTitle.textContent = product.name;
       qvDescription.textContent = product.description || 'No description available';
-      qvPrice.textContent = `$${parseFloat(product.price || 0).toFixed(2)}`;
+      qvPrice.textContent = `₦${parseFloat(product.price || 0).toFixed(2)}`;
       
       // Set up add to cart button
       qvAddToCart.onclick = () => addToCart(product);
@@ -1326,7 +1326,7 @@
             <div class="cart-item-image" style="background-image: url('${item.image || 'https://via.placeholder.com/80x80?text=No+Image'}')"></div>
             <div class="cart-item-details">
               <h4>${item.name}</h4>
-              <div class="cart-item-price">$${item.price.toFixed(2)}</div>
+              <div class="cart-item-price">₦${item.price.toFixed(2)}</div>
               <div class="cart-item-actions">
                 <div class="quantity-control">
                   <button class="quantity-btn decrease" data-id="${item.id}">-</button>
@@ -1366,7 +1366,7 @@
       
       // Update cart total
       const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      cartTotal.textContent = `$${total.toFixed(2)}`;
+      cartTotal.textContent = `₦${total.toFixed(2)}`;
     }
 
     // Function to increase item quantity
@@ -1440,10 +1440,10 @@
       let message = "Hello, I would like to make payment for the following items from Fitness Mall:%0A%0A";
       
       cart.forEach(item => {
-        message += `- ${item.name} (Qty: ${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}%0A`;
+        message += `- ${item.name} (Qty: ${item.quantity}) - ₦${(item.price * item.quantity).toFixed(2)}%0A`;
       });
       
-      message += `%0ATotal: $${total.toFixed(2)}%0A%0APlease provide your bank account details.`;
+      message += `%0ATotal: ₦${total.toFixed(2)}%0A%0APlease provide your bank account details.`;
       
       return message;
     }
