@@ -1187,7 +1187,7 @@
         filteredProducts = [];
 
         if (querySnapshot.empty) {
-          productsGrid.innerHTML = '<div class="loading">No products found. Please add products in the admin panel.</div>';
+          productsGrid.innerHTML = '<div class="loading">No products found.</div>';
           return;
         }
 
@@ -1585,4 +1585,5 @@
     document.addEventListener('DOMContentLoaded', loadProducts);
   </script>
 </body>
+
 </html>
